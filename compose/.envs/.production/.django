@@ -2,7 +2,7 @@
 # ------------------------------------------------------------------------------
 # DJANGO_READ_DOT_ENV_FILE=True
 DJANGO_SETTINGS_MODULE=config.settings.production
-DJANGO_SECRET_KEY=
+DJANGO_SECRET_KEY=gfg8f8gfg83fg83g38fg83fg8f8gf38gf3wgfkjgfag3fg3f8
 DJANGO_ADMIN_URL=admin/
 
 # Security
@@ -16,6 +16,7 @@ EMAIL_HOST=
 EMAIL_PORT=
 EMAIL_HOST_USER=
 EMAIL_HOST_PASSWORD=
+SENDGRID_API_KEY=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
 
 # Gunicorn
 # ------------------------------------------------------------------------------

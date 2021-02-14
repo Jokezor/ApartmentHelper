@@ -2,6 +2,7 @@
 # ------------------------------------------------------------------------------
 POSTGRES_HOST=postgres
 POSTGRES_PORT=5432
-POSTGRES_DB=ApartmentHelper
-POSTGRES_USER=ApartmentHelper
-POSTGRES_PASSWORD=jFRQXCLhmytLfLTEwQDaJEAmYfSiJoPnoSGcLvBSaHFTrMTZJc
+POSTGRES_DB=collabmaker
+POSTGRES_USER=collabmaker
+POSTGRES_PASSWORD=uhKNwYgahtnLwZDEqLVKwSCGzmnoebQsePUabmZNyzDsVeFPke
+

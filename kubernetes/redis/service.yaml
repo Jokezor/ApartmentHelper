@@ -1,7 +1,7 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: redis-service
+  name: redis_server
 spec:
   type: ExternalName
   externalName: private-db-redis-lon1-92111-do-user-3038336-0.a.db.ondigitalocean.com

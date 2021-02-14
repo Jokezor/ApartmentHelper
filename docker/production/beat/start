@@ -4,4 +4,4 @@ set -o errexit
 set -o nounset
 
 
-celery -A ApartmentHelper.celery beat -l INFO
+celery -A apartmenthelper.celery beat -l INFO

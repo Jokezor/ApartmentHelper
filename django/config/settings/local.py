@@ -9,9 +9,10 @@ DEBUG = True
 SECRET_KEY = env('DJANGO_SECRET_KEY')
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = [
-    "localhost",
-    "0.0.0.0",
+    #"localhost",
+    #"0.0.0.0",
     "127.0.0.1",
+    '*',
 ]
 
 # CACHES
@@ -32,7 +33,9 @@ TEMPLATES[0]['OPTIONS']['debug'] = DEBUG  # noqa F405
 # EMAIL
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
+#EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
 EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
+
 
 # django-debug-toolbar
 # ------------------------------------------------------------------------------
@@ -57,9 +60,13 @@ if env('USE_DOCKER') == 'yes':
 # Celery
 # ------------------------------------------------------------------------------
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#task-always-eager
-CELERY_TASK_ALWAYS_EAGER = True
+CELERY_TASK_ALWAYS_EAGER = False
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#task-eager-propagates
-CELERY_TASK_EAGER_PROPAGATES = True
+CELERY_TASK_EAGER_PROPAGATES = False
 
 # Your stuff...
 # ------------------------------------------------------------------------------
+EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = 'http://127.0.0.1:3000/login'
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = 'http://127.0.0.1:3000/login'
+ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = 'http://127.0.0.1:3000/login'
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True

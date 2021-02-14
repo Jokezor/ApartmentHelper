@@ -1,7 +1,7 @@
 # Caddy
 # ------------------------------------------------------------------------------
-DJANGO_DOMAIN_NAME=api.inextro.com
-REACT_DOMAIN_NAME=app.inextro.com
+DJANGO_DOMAIN_NAME=api.apartmenthelper.com
+REACT_DOMAIN_NAME=app.apartmenthelper.com
 # Sentry
 # ------------------------------------------------------------------------------
 REACT_APP_SENTRY_DSN=

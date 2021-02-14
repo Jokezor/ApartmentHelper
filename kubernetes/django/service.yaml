@@ -1,13 +1,13 @@
+apiVersion: extensions/v1
 kind: Service
-apiVersion: v1
 metadata:
-  name: cookiecutter-project-django-service
+  name: apartmenthelper_django_service
 spec:
   selector:
-    deployment: cookiecutter-project_django
+    deployment: apartmenthelper_django
   ports:
   - name:
     protocol: TCP
     port: 8000
     targetPort: 8000
-  type: ClusterIP
+  type: NodePort

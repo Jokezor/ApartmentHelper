@@ -5,4 +5,11 @@ IPYTHONDIR=/app/.ipython
 
 # Django
 # ------------------------------------------------------------------------------
-DJANGO_SECRET_KEY=WdxyQYOsKHAHySEeDzqgdMTLMiGjNDVnWWRiJMDDKyYQEIgcWd
+DJANGO_SECRET_KEY=hdBSFZzkEwkxAlhcYSLeBPpKLRqVoaSOlORHGITckoeruXTAxk
+
+# SendGrid
+# ------------------------------------------------------------------------------
+# Web API
+#SENDGRID_API_KEY=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
+# SMTP
+SENDGRID_API_KEY=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

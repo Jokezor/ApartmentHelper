@@ -9,9 +9,9 @@ from .base import env
 SECRET_KEY = env('DJANGO_SECRET_KEY')
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=[
-    'inextro.com',
-    'app.inextro.com',
-    'api.inextro.com',
+    'apartmenthelper.com',
+    'app.apartmenthelper.com',
+    'api.apartmenthelper.com',
 ])
 
 # DATABASES
@@ -74,7 +74,7 @@ TEMPLATES[0]['OPTIONS']['loaders'] = [  # noqa F405
 # https://docs.djangoproject.com/en/dev/ref/settings/#default-from-email
 DEFAULT_FROM_EMAIL = env(
     'DJANGO_DEFAULT_FROM_EMAIL',
-    default='ApartmentHelper <noreply@inextro.com>'
+    default='apartmenthelper <noreply@apartmenthelper.com>'
 )
 # https://docs.djangoproject.com/en/dev/ref/settings/#server-email
 SERVER_EMAIL = env('DJANGO_SERVER_EMAIL', default=DEFAULT_FROM_EMAIL)
@@ -102,75 +102,6 @@ MIDDLEWARE = ['raven.contrib.django.raven_compat.middleware.SentryResponseErrorI
 
 # Sentry
 # ------------------------------------------------------------------------------
-SENTRY_DSN = env('SENTRY_DSN')
-SENTRY_CLIENT = env('DJANGO_SENTRY_CLIENT', default='raven.contrib.django.raven_compat.DjangoClient')
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': True,
-    'root': {
-        'level': 'WARNING',
-        'handlers': ['sentry'],
-    },
-    'formatters': {
-        'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s '
-                      '%(process)d %(thread)d %(message)s'
-        },
-    },
-    'handlers': {
-        'sentry': {
-            'level': 'ERROR',
-            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
-        },
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'verbose'
-        },
-        'graylog': {
-            'class': 'graypy.GELFHandler',
-            'host': env('GRAYLOG_HOST'),
-            'port': env('GRAYLOG_PORT', default=12201),
-            'debugging_fields': False,
-        },
-    },
-    'loggers': {
-        'django.db.backends': {
-            'level': 'ERROR',
-            'handlers': ['console'],
-            'propagate': False,
-        },
-        'raven': {
-            'level': 'DEBUG',
-            'handlers': ['console'],
-            'propagate': False,
-        },
-        'sentry.errors': {
-            'level': 'DEBUG',
-            'handlers': ['console'],
-            'propagate': False,
-        },
-        'django.security.DisallowedHost': {
-            'level': 'ERROR',
-            'handlers': ['console'],
-            'propagate': False,
-        },
-        'ApartmentHelper': {
-            'handlers': ['graylog',],
-            'level': 'INFO',
-            'propagate': False,
-        },
-        'celery': {
-            'handlers': ['graylog',],
-            'level': 'INFO',
-            'propagate': False,
-        },
-    },
-}
 
-SENTRY_CELERY_LOGLEVEL = env.int('DJANGO_SENTRY_LOG_LEVEL', logging.INFO)
-RAVEN_CONFIG = {
-    'dsn': SENTRY_DSN
-}
 # Your stuff...
 # ------------------------------------------------------------------------------

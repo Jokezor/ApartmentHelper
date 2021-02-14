@@ -64,4 +64,8 @@ done
 >&2 echo 'Redis is available'
 
 
+
+
+
 exec "$@"
+

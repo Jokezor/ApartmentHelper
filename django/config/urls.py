@@ -1,17 +1,24 @@
 from django.conf import settings
-from django.urls import include, path
+from django.urls import include, path, re_path
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import TemplateView
 from django.views import defaults as default_views
 from django.views.debug import default_urlconf
+from rest_framework_swagger.views import get_swagger_view
+from rest_framework.schemas.coreapi import AutoSchema
+
+# Custom made
+
+schema_view = get_swagger_view(title='Collabmaker REST API')
 
 urlpatterns = [
-    path("", default_urlconf),
     path(settings.ADMIN_URL, admin.site.urls),
-
+    path('api-docs/', schema_view),
+    path('', schema_view, name='index'),
+    
 ] + static(
-    settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
+    settings.STATIC_URL, document_root=settings.STATIC_ROOT
 )
 
 if settings.DEBUG:

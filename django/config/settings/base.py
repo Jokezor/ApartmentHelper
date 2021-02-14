@@ -1,11 +1,12 @@
 """
 Base settings to build other settings files upon.
 """
+# just a test comment
 
 import environ
 
-ROOT_DIR = environ.Path(__file__) - 3  # (ApartmentHelper/config/settings/base.py - 3 = ApartmentHelper/)
-APPS_DIR = ROOT_DIR.path('ApartmentHelper')
+ROOT_DIR = environ.Path(__file__) - 3  # (apartmenthelper/config/settings/base.py - 3 = apartmenthelper/)
+APPS_DIR = ROOT_DIR.path('apartmenthelper')
 
 env = environ.Env()
 
@@ -18,6 +19,7 @@ if READ_DOT_ENV_FILE:
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
 DEBUG = env.bool('DJANGO_DEBUG', False)
+
 # Local time zone. Choices are
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 TIME_ZONE = 'Europe/Stockholm'
@@ -32,12 +34,13 @@ USE_L10N = True
 # https://docs.djangoproject.com/en/dev/ref/settings/#use-tz
 USE_TZ = True
 # https://docs.djangoproject.com/en/dev/ref/settings/#locale-paths
-LOCALE_PATHS = [str(ROOT_DIR('ApartmentHelper/locale'))]
+LOCALE_PATHS = [str(ROOT_DIR('apartmenthelper/locale'))]
 
 # DATABASES
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
+    #'default': 'export DATABASE_URL="postgres://{POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}'
     'default': env.db('DATABASE_URL'),
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
@@ -48,6 +51,27 @@ DATABASES['default']['ATOMIC_REQUESTS'] = True
 ROOT_URLCONF = 'config.urls'
 # https://docs.djangoproject.com/en/dev/ref/settings/#wsgi-application
 WSGI_APPLICATION = 'config.wsgi.application'
+ASGI_APPLICATION = "config.routing.application"
+
+
+#EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
+
+SENDGRID_API_KEY = env("SENDGRID_API_KEY")
+
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'apikey' # this is exactly the value 'apikey'
+EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+
+DEFAULT_FROM_EMAIL = 'hello@apartmenthelper.com'
 
 # APPS
 # ------------------------------------------------------------------------------
@@ -59,16 +83,52 @@ DJANGO_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    'django.contrib.gis',
+    'django.contrib.admindocs',
+    'corsheaders',
 ]
 THIRD_PARTY_APPS = [
-    'rest_framework',
+    'django_extensions',
     'django_celery_beat',
+    'rest_framework',
+    'rest_framework_swagger',
+    'rest_framework.authtoken',
+    'rest_auth',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'rest_auth.registration',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.google',
+    'flower',
+    'drf_multiple_model'
 ]
 LOCAL_APPS = [
     # Your stuff: custom apps go here
+    'apartmenthelper.ScrapingBooli.apps.ScrapingBooliConfig',
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    "django.contrib.auth.backends.ModelBackend",
+    # `allauth` specific authentication methods, such as login by e-mail
+    "allauth.account.auth_backends.AuthenticationBackend",
+)
+ 
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ), 
+}
+
+REST_FRAMEWORK = {'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'}
 
 # PASSWORDS
 # ------------------------------------------------------------------------------
@@ -108,12 +168,25 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware', 
 ]
+
+# Configure what we all for CORS
+CORS_ORIGIN_ALLOW_ALL = True # If this is used then `CORS_ORIGIN_WHITELIST` will not have any effect
+CORS_ALLOW_CREDENTIALS = True
+#CORS_ORIGIN_WHITELIST = [
+    #'http://localhost:3000',
+#] # If this is used, then not need to use `CORS_ORIGIN_ALLOW_ALL = True`
+#CORS_ORIGIN_REGEX_WHITELIST = [
+#    'http://localhost:3000',
+#]
 
 # STATIC
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#static-root
+
 STATIC_ROOT = str(APPS_DIR('static-root'))
+
 # https://docs.djangoproject.com/en/dev/ref/settings/#static-url
 STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
@@ -125,6 +198,8 @@ STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
+
+LOGIN_REDIRECT_URL = '/'
 
 # MEDIA
 # ------------------------------------------------------------------------------
@@ -163,6 +238,7 @@ TEMPLATES = [
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
+                
             ],
         },
     },
@@ -186,7 +262,7 @@ ADMIN_URL = 'admin/'
 
 # Celery
 # ------------------------------------------------------------------------------
-INSTALLED_APPS += ['ApartmentHelper.celery.apps.CeleryAppConfig']
+INSTALLED_APPS += ['apartmenthelper.celery.apps.CeleryAppConfig']
 if USE_TZ:
     # http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-timezone
     CELERY_TIMEZONE = TIME_ZONE
@@ -206,3 +282,5 @@ CELERYD_TASK_TIME_LIMIT = 5 * 60
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#task-soft-time-limit
 # TODO: set to whatever value is adequate in your circumstances
 CELERYD_TASK_SOFT_TIME_LIMIT = 60
+
+# print(CELERY_BROKER_URL)

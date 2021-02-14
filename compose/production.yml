@@ -1,26 +1,27 @@
 version: '3'
 
 volumes:
-  production-postgres-data: {}
-  production-postgres-data-backups: {}
-  production-caddy: {}
-  production-static: {}
-  production-media: {}
+  production_postgres_data: {}
+  production_postgres_data_backups: {}
+  production_caddy: {}
+  production_static: {}
+  production_media: {}
 
 services:
   django: &django
     build:
       context: ..
       dockerfile: ./docker/production/django/Dockerfile
-    image: ApartmentHelper-production-django
+    image: apartmenthelper_production_django
     deploy:
       replicas: 2
     depends_on:
       - postgres
       - redis
     volumes:
-      - production_static:/app/ApartmentHelper/static-root
-      - production_media:/app/ApartmentHelper/media-root
+      - production_static:/app/apartmenthelper/static-root
+      - production_media:/app/apartmenthelper/media-root
+      - ../django:/app:delegated
     env_file:
       - .envs/.production/.django
       - .envs/.production/.postgres
@@ -31,7 +32,7 @@ services:
     build:
       context: ..
       dockerfile: docker/production/postgres/Dockerfile
-    image: ApartmentHelper-production-postgres
+    image: apartmenthelper_production_postgres
     volumes:
       - production_postgres_data:/var/lib/postgresql/data
       - production_postgres_data_backups:/backups
@@ -42,11 +43,13 @@ services:
     build:
       context: ..
       dockerfile: docker/production/caddy/Dockerfile
-    image: ApartmentHelper-production-caddy
+      args:
+        build_script: build-production
+    image: apartmenthelper_production_caddy
     depends_on:
       - django
     volumes:
-      - production_caddy:/data
+      - production_caddy:/root/.caddy
       - production_static:/srv/static
       - production_media:/srv/media
     env_file:
@@ -59,7 +62,7 @@ services:
     build:
       context: ..
       dockerfile: docker/production/redis/Dockerfile
-    image: ApartmentHelper-production-redis
+    image: apartmenthelper_production_redis
     env_file:
       - .envs/.production/.redis
 
@@ -67,12 +70,19 @@ services:
     <<: *django
     deploy:
       replicas: 1
-    image: ApartmentHelper-production-celeryworker
+    image: apartmenthelper_production_celeryworker
     command: /start-celeryworker
 
   celerybeat:
     <<: *django
     deploy:
       replicas: 1
-    image: ApartmentHelper-production-celerybeat
+    image: apartmenthelper_production_celerybeat
     command: /start-celerybeat
+
+  # celeryflower:
+  #   <<: *django
+  #   deploy:
+  #     replicas: 1
+  #   image: apartmenthelper_production_celeryflower
+  #   command: /start-celeryflower

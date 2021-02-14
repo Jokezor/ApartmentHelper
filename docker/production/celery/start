@@ -4,4 +4,4 @@ set -o errexit
 set -o nounset
 
 
-celery -A ApartmentHelper.celery worker -l INFO
+celery -A apartmenthelper.celery worker -l debug

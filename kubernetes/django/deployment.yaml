@@ -1,11 +1,11 @@
-apiVersion: apps/v1
+apiVersion: extensions/v1
 kind: Deployment
 metadata:
-  name: django-deployment
+  name: django_deployment
   labels:
     deployment: django
 spec:
-  replicas: 2
+  replicas: 4
   selector:
     matchLabels:
       pod: django
@@ -16,20 +16,19 @@ spec:
     spec:
       containers:
         - name: django
-          image: docker.io/dharoc/cookiecutter-project-production-django
+          image: apartmenthelper_production_django
           ports:
             - containerPort: 8000
-          command: ["/entrypoint"]
-          args: ["/start"]
+          command: /start
           env:
             - name: POSTGRES_HOST
-              value: postgres-service
+              value: postgres_service
 
             - name: POSTGRES_PORT
-              value: "25060"
+              value: 25060
 
             - name: POSTGRES_DB
-              value: defaultdb
+              value: apartmenthelper
 
             - name: POSTGRES_USER
               valueFrom:
@@ -44,22 +43,4 @@ spec:
                   key: password
 
             - name: REDIS_HOST
-              value: redis-service
-
-            - name: REDIS_PORT
-              value: "25061"
-
-            - name: REDIS_DB
-              value: "0"
-
-            - name: REDIS_USER
-              valueFrom:
-                secretKeyRef:
-                  name: redis-credentials
-                  key: user
-
-            - name: REDIS_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: redis-credentials
-                  key: password
+              value: redis_service
