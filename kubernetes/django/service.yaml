@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: cookiecutter-project-django-service
+spec:
+  selector:
+    deployment: cookiecutter-project_django
+  ports:
+  - name:
+    protocol: TCP
+    port: 8000
+    targetPort: 8000
+  type: ClusterIP

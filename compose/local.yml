@@ -1,0 +1,64 @@
+version: '3'
+
+volumes:
+  local-postgres-data: {}
+
+services:
+  django: &django
+    build:
+      context: ..
+      dockerfile: ./docker/local/django/Dockerfile
+    image: ApartmentHelper-local-django
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ../django:/app
+    env_file:
+      - .envs/.local/.django
+      - .envs/.local/.postgres
+      - .envs/.local/.redis
+    ports:
+      - "8000:8000"
+    command: /start
+
+  postgres:
+    build:
+      context: ..
+      dockerfile: docker/production/postgres/Dockerfile
+    image: ApartmentHelper-local-postgres
+    volumes:
+      - local_postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .envs/.local/.postgres
+  react:
+    build:
+      context: ..
+      dockerfile: docker/local/react/Dockerfile
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    stdin_open: true  # https://github.com/facebook/create-react-app/issues/8688
+    image: ApartmentHelper-local-react
+    depends_on:
+      - django
+    volumes:
+      - ../react/src:/app/src
+    env_file:
+      - .envs/.local/.react
+    ports:
+      - "3000:3000"
+    command: /start
+  
+  redis:
+    build:
+      context: ..
+      dockerfile: docker/production/redis/Dockerfile
+    image: ApartmentHelper-local-redis
+    env_file:
+      - .envs/.local/.redis
+
+  celery:
+    <<: *django  # Extend the django service
+    image: ApartmentHelper-local-celeryworker
+    ports: []
+    command: /start-celeryworker

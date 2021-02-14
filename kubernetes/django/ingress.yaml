@@ -1,0 +1,8 @@
+kind: Ingress
+apiVersion: networking.k8s.io/v1beta1
+metadata:
+  name: cookiecutter-project-django-ingress
+spec:
+  backend:
+    serviceName: cookiecutter-project-django-service
+    servicePort: 8000

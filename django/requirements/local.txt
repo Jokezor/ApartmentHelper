@@ -1,0 +1,8 @@
+-r ./base.txt
+
+Werkzeug==0.14.1  # https://github.com/pallets/werkzeugx
+
+# Django
+# ------------------------------------------------------------------------------
+factory-boy==2.11.1  # https://github.com/FactoryBoy/factory_boy
+django-debug-toolbar==2.2  # https://github.com/jazzband/django-debug-toolbar

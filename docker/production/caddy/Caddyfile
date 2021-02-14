@@ -1,0 +1,34 @@
+{
+    order http_cache before reverse_proxy
+}
+
+www.{$DJANGO_DOMAIN_NAME} {
+    redir https://{$DJANGO_DOMAIN_NAME}
+}
+
+{$DJANGO_DOMAIN_NAME} {
+    reverse_proxy django:5000 {
+        header_up X-Real-IP {http.reverse_proxy.upstream.remote}
+    }
+    http_cache {
+        cache_type in_memory
+        match_path /
+    }
+    encode gzip
+    root * /srv
+    file_server
+}
+
+
+www.{$REACT_DOMAIN_NAME} {
+    redir https://{$REACT_DOMAIN_NAME}
+}
+
+{$REACT_DOMAIN_NAME} {
+  encode gzip
+  root * /srv/react
+  file_server
+  try_files {path} {path}/ index.html
+}
+
+

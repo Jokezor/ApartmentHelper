@@ -1,0 +1,25 @@
+pytz==2018.9  # https://github.com/stub42/pytz
+python-slugify==2.0.1  # https://github.com/un33k/python-slugify
+Pillow==5.4.1  # https://github.com/python-pillow/Pillow
+argon2-cffi==19.1.0  # https://github.com/hynek/argon2_cffi
+psycopg2==2.7.4 --no-binary psycopg2  # https://github.com/psycopg/psycopg2
+
+
+# Celery
+# ------------------------------------------------------------------------------
+celery==4.2.1  # pyup: < 5.0  # https://github.com/celery/celery
+django-celery-beat==2.0.0  # https://github.com/celery/django-celery-beat
+redis==3.5.0  # https://github.com/antirez/redis
+django-redis==4.10.0  # https://github.com/niwinz/django-redis
+
+
+# Django
+# ------------------------------------------------------------------------------
+django==3.0.5  # https://www.djangoproject.com/
+django-environ==0.4.5  # https://github.com/joke2k/django-environ
+
+
+# Django REST Framework
+# ------------------------------------------------------------------------------
+djangorestframework==3.11  # https://github.com/encode/django-rest-framework
+

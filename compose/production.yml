@@ -1,0 +1,78 @@
+version: '3'
+
+volumes:
+  production-postgres-data: {}
+  production-postgres-data-backups: {}
+  production-caddy: {}
+  production-static: {}
+  production-media: {}
+
+services:
+  django: &django
+    build:
+      context: ..
+      dockerfile: ./docker/production/django/Dockerfile
+    image: ApartmentHelper-production-django
+    deploy:
+      replicas: 2
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - production_static:/app/ApartmentHelper/static-root
+      - production_media:/app/ApartmentHelper/media-root
+    env_file:
+      - .envs/.production/.django
+      - .envs/.production/.postgres
+      - .envs/.production/.redis
+    command: /start
+
+  postgres:
+    build:
+      context: ..
+      dockerfile: docker/production/postgres/Dockerfile
+    image: ApartmentHelper-production-postgres
+    volumes:
+      - production_postgres_data:/var/lib/postgresql/data
+      - production_postgres_data_backups:/backups
+    env_file:
+      - .envs/.production/.postgres
+
+  caddy:
+    build:
+      context: ..
+      dockerfile: docker/production/caddy/Dockerfile
+    image: ApartmentHelper-production-caddy
+    depends_on:
+      - django
+    volumes:
+      - production_caddy:/data
+      - production_static:/srv/static
+      - production_media:/srv/media
+    env_file:
+      - .envs/.production/.caddy
+    ports:
+      - "0.0.0.0:80:80"
+      - "0.0.0.0:443:443"
+
+  redis:
+    build:
+      context: ..
+      dockerfile: docker/production/redis/Dockerfile
+    image: ApartmentHelper-production-redis
+    env_file:
+      - .envs/.production/.redis
+
+  celeryworker:
+    <<: *django
+    deploy:
+      replicas: 1
+    image: ApartmentHelper-production-celeryworker
+    command: /start-celeryworker
+
+  celerybeat:
+    <<: *django
+    deploy:
+      replicas: 1
+    image: ApartmentHelper-production-celerybeat
+    command: /start-celerybeat

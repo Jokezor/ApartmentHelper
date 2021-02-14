@@ -1,0 +1,7 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: postgres-service
+spec:
+  type: ExternalName
+  externalName: db-postgresql-lon1-46482-do-user-3038336-0.a.db.ondigitalocean.com
